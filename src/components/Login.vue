@@ -22,6 +22,7 @@
                 <b-button variant="danger" type="reset">Limpiar</b-button>
             </b-form>
         </b-card>
+        <router-view></router-view>
       </b-col>
     </b-row>
   </section>
@@ -29,6 +30,7 @@
 </template>
 
 <script lang="js">
+import {mapActions} from 'vuex'
 import firebase from "firebase/app";
 import "firebase/auth";
   export default  {
@@ -44,19 +46,23 @@ import "firebase/auth";
       }
     },
     methods: {
+      ...mapActions(['verificarUsuario']),
       login(){
             let vm = this;
             firebase.auth().signInWithEmailAndPassword(this.email, this.password)
                 .then((data) => {
                     console.log(data);
-                    vm.$router.replace({ name: "Home" });
+                    return vm.verificarUsuario();
+                })
+                .then(() => {
+                  vm.$router.replace({ name: "Home" });
                 })
                 .catch((error) => {
                     alert(error.message);
                 });
       },
       register(){
-          this.$router.replace({name:'Register'})
+          this.$router.replace({name:'Auth.Register'})
       }
     },
     computed: {

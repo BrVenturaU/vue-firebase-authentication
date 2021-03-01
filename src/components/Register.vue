@@ -12,7 +12,7 @@
         <b-card>
             <b-form class="mx-auto" @submit.prevent="register">
                 <b-form-group class="text-left" label="Tu nombre:" description="Escriba su nombre">
-                  <b-form-input type="text" placeholder="Tu nombre..." required v-model="nombre"></b-form-input>
+                  <b-form-input type="text" placeholder="Tu nombre..." required v-model="name"></b-form-input>
                 </b-form-group>
                 <b-form-group class="text-left" label="Correo:" description="Escriba su correo">
                   <b-form-input type="email" placeholder="john.doe@domain.com" required v-model="email"></b-form-input>
@@ -32,6 +32,7 @@
 </template>
 
 <script lang="js">
+import {mapActions} from 'vuex'
 import firebase from "firebase/app";
 import "firebase/auth";
   export default  {
@@ -48,24 +49,28 @@ import "firebase/auth";
       }
     },
     methods: {
+      ...mapActions(['verificarUsuario']),
       register(){
             let vm = this;
-            firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+            firebase.auth().createUserWithEmailAndPassword(vm.email, vm.password)
                 .then(data => {
-                    data.user
+                    return data.user
                         .updateProfile({
-                            displayName: this.nombre
-                        })
-                        .then(() => {
-                            vm.$router.replace({name:'Home'})
+                            displayName: vm.name
                         });
+                })
+                .then(() => {
+                  return vm.verificarUsuario();
+                })
+                .then(() => {
+                  this.$router.replace({name:'Home'});
                 })
                 .catch(err => {
                     this.error = err.message;
                 });
       },
       login(){
-          this.$router.replace({name: 'Login'})
+          this.$router.replace({name: 'Auth'})
       }
     },
     computed: {

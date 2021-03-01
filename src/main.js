@@ -27,12 +27,6 @@ var firebaseConfig = {
 };
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
-firebase.auth().onAuthStateChanged(usuario => {
-  store.dispatch("verificarUsuario", {
-    nombre: usuario.displayName,
-    email: usuario.email
-  });
-});
 
 new Vue({
   router,

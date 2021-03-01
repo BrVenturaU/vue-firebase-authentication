@@ -15,7 +15,7 @@
             <b-nav-item-dropdown right>
                 <!-- Using 'button-content' slot -->
                 <template #button-content>
-                    <em>{{usuario.nombre}}</em>
+                    <em>{{usuario != null ? usuario.nombre : ''}}</em>
                 </template>
                 <b-dropdown-item href="#">Perfil</b-dropdown-item>
                 <b-dropdown-item href="#" @click="logout">Cerrar Sesión</b-dropdown-item>
@@ -28,7 +28,7 @@
 
 <script lang="js">
 import firebase from "firebase/app";
-import {mapState} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 import "firebase/auth";
   export default  {
     name: 'src-components-header',
@@ -42,10 +42,15 @@ import "firebase/auth";
         ...mapState(['usuario'])
     },
     methods: {
+      ...mapActions(['verificarUsuario']),
       logout(){
+          let vm = this
         firebase.auth().signOut()
           .then(() => {
-            this.$router.replace("/login");
+            return vm.verificarUsuario();
+          })
+          .then(() => {
+            this.$router.replace({name:'Auth'});
           })
           .catch((error) => {
             alert(error.message);
