@@ -1,15 +1,17 @@
 <template>
-  <div class="home">
+  <div class="">
     <Header />
-    <h1>Titulo</h1>
+    <Dashboard />
   </div>
 </template>
 
 <script>
 import Header from '@/components/Header.vue'
+import Dashboard from '@/components/Dashboard.vue'
 export default {
   components:{
-    Header
+    Header,
+    Dashboard
   }
 }
 </script>
